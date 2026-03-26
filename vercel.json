@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "env": {
+    "VITE_SUPABASE_URL": "https://zfemmuyxtwgtsvksrvbn.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmZW1tdXl4dHdndHN2a3NydmJuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NTIxMjksImV4cCI6MjA5MDAyODEyOX0.nPF0JcmP1ln4EBrLzh1Y2qCIrOKHpI-gnosn2Q6aDlk",
+    "VITE_N8N_WEBHOOK_BASE": "https://cohort2pod2.app.n8n.cloud/webhook",
+    "VITE_WEBHOOK_PATH_PREFIX": "cf-",
+    "VITE_LINKEDIN_CLIENT_ID": "78gzr4q3a33f19"
+  }
+}
