@@ -78,8 +78,9 @@ export default function NewsletterConnect({ isOpen, onClose, onConnected }) {
     setTesting(true)
     setTestResult(null)
     try {
-      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL || ''
-      const res = await fetch(`${webhookUrl}/test-newsletter`, {
+      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_BASE || ''
+      const pathPrefix = import.meta.env.VITE_WEBHOOK_PATH_PREFIX || ''
+      const res = await fetch(`${webhookUrl}/${pathPrefix}test-newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ provider, api_key: apiKey.trim(), sender_email: senderEmail.trim(), sender_name: senderName.trim(), test_recipient: user?.email }),

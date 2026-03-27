@@ -1,5 +1,5 @@
 import { useAuth } from '../contexts/AuthContext'
-import { hasMinRole, ROLE_HIERARCHY } from '../lib/auth'
+import { hasMinRole } from '../lib/auth'
 
 /**
  * RoleGate
