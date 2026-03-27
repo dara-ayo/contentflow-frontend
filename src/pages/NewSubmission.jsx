@@ -26,6 +26,8 @@ export default function NewSubmission() {
   const [publishImmediately, setPublishImmediately] = useState(false)
   const [tone, setTone] = useState('Professional')
   const [language, setLanguage] = useState('English')
+  const [includeImages, setIncludeImages] = useState(true)
+  const [imageStyle, setImageStyle] = useState('Photo')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
   const [validationErrors, setValidationErrors] = useState({})
@@ -317,6 +319,49 @@ export default function NewSubmission() {
                   <option key={lang} value={lang}>{lang}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Image Options */}
+            <div>
+              <label className="block text-[11px] font-medium text-text-tertiary mb-2 uppercase tracking-wider">Images</label>
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-surface-tertiary border border-surface-border mb-3">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={includeImages}
+                  onClick={() => setIncludeImages(!includeImages)}
+                  className={`relative mt-0.5 inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    includeImages ? 'bg-accent' : 'bg-surface-border'
+                  }`}
+                >
+                  <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200 ease-in-out ${includeImages ? 'translate-x-4' : 'translate-x-0'}`} />
+                </button>
+                <div>
+                  <span className="text-sm font-medium text-text-primary">Include image recommendations</span>
+                  <p className="text-xs text-text-tertiary mt-0.5">
+                    AI will suggest relevant images for each platform post with search terms you can use on Unsplash or Pexels.
+                  </p>
+                </div>
+              </div>
+              {includeImages && (
+                <div className="flex flex-wrap gap-2 animate-fade-in">
+                  {['Photo', 'Illustration', 'Infographic', 'Minimal', 'Abstract'].map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setImageStyle(s)}
+                      className={`filter-pill ${imageStyle === s ? 'filter-pill-active' : ''}`}
+                    >
+                      {s === 'Photo' && '📷 '}
+                      {s === 'Illustration' && '🎨 '}
+                      {s === 'Infographic' && '📊 '}
+                      {s === 'Minimal' && '◻️ '}
+                      {s === 'Abstract' && '🌀 '}
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Publish Toggle */}
