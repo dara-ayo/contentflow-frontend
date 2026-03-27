@@ -1,14 +1,11 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
-import RoleGate from './RoleGate'
 
 const NAV_LINKS = [
   {
     to: '/',
     label: 'Dashboard',
-    minRole: 'viewer',
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -18,7 +15,6 @@ const NAV_LINKS = [
   {
     to: '/submit',
     label: 'New Submission',
-    minRole: 'editor',
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M12 4v16m8-8H4" />
@@ -28,7 +24,6 @@ const NAV_LINKS = [
   {
     to: '/team',
     label: 'Team',
-    minRole: 'admin',
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -38,7 +33,6 @@ const NAV_LINKS = [
   {
     to: '/settings',
     label: 'Settings',
-    minRole: 'admin',
     icon: (
       <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -48,7 +42,6 @@ const NAV_LINKS = [
   },
 ]
 
-/* Sun icon for light mode */
 function SunIcon({ className }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,7 +50,6 @@ function SunIcon({ className }) {
   )
 }
 
-/* Moon icon for dark mode */
 function MoonIcon({ className }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +60,6 @@ function MoonIcon({ className }) {
 
 export default function Layout({ children }) {
   const location = useLocation()
-  const { profile, signOut } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -77,9 +68,6 @@ export default function Layout({ children }) {
     if (path === '/') return location.pathname === '/'
     return location.pathname.startsWith(path)
   }
-
-  const initial = ((profile?.display_name || profile?.email || '?')[0]).toUpperCase()
-  const displayName = profile?.display_name || profile?.email || 'User'
 
   return (
     <div className="min-h-screen bg-surface">
@@ -118,14 +106,10 @@ export default function Layout({ children }) {
               </span>
             )}
           </Link>
-          {/* Collapse toggle - desktop only */}
           {!collapsed && (
             <button
               onClick={() => setCollapsed(true)}
               className="ml-auto p-1 rounded-lg text-text-tertiary hover:text-text-primary transition-all duration-150 hidden lg:flex"
-              style={{ '--tw-bg-opacity': 1 }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-hover-muted)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = ''}
               title="Collapse sidebar"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,30 +134,26 @@ export default function Layout({ children }) {
         {/* Nav items */}
         <nav className="flex flex-col gap-0.5 px-3 py-4 flex-1 overflow-y-auto">
           {NAV_LINKS.map((link) => (
-            <RoleGate key={link.to} minRole={link.minRole}>
-              <Link
-                to={link.to}
-                onClick={() => setMobileOpen(false)}
-                className={isActive(link.to) ? 'nav-link-active' : 'nav-link'}
-                title={collapsed ? link.label : undefined}
-              >
-                <span className={`flex-shrink-0 ${isActive(link.to) ? 'text-accent' : 'text-text-tertiary group-hover:text-text-secondary'} transition-colors`}>
-                  {link.icon}
-                </span>
-                {!collapsed && link.label}
-              </Link>
-            </RoleGate>
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setMobileOpen(false)}
+              className={isActive(link.to) ? 'nav-link-active' : 'nav-link'}
+              title={collapsed ? link.label : undefined}
+            >
+              <span className={`flex-shrink-0 ${isActive(link.to) ? 'text-accent' : 'text-text-tertiary group-hover:text-text-secondary'} transition-colors`}>
+                {link.icon}
+              </span>
+              {!collapsed && link.label}
+            </Link>
           ))}
         </nav>
 
         {/* Theme toggle */}
-        <div className={`px-3 pb-1 flex-shrink-0 ${collapsed ? 'flex justify-center' : ''}`}>
+        <div className={`px-3 pb-3 flex-shrink-0 ${collapsed ? 'flex justify-center' : ''}`}>
           <button
             onClick={toggleTheme}
             className={`flex items-center gap-3 w-full px-3 py-2 rounded-xl text-[13px] font-medium text-text-tertiary hover:text-text-primary transition-all duration-150 ${collapsed ? 'justify-center' : ''}`}
-            style={{ background: 'transparent' }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-hover-subtle)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
             title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             <span className="flex-shrink-0 relative w-[18px] h-[18px]">
@@ -200,43 +180,27 @@ export default function Layout({ children }) {
           </button>
         </div>
 
-        {/* User profile area */}
-        {profile && (
-          <div
-            className={`p-3 flex-shrink-0 ${collapsed ? 'flex justify-center' : ''}`}
-            style={{ borderTop: '1px solid var(--border-light)' }}
-          >
-            <div className={`flex items-center ${collapsed ? '' : 'gap-3'}`}>
-              <div className="w-8 h-8 rounded-full bg-accent-muted border border-accent-border flex items-center justify-center text-xs font-semibold text-accent flex-shrink-0">
-                {initial}
-              </div>
-              {!collapsed && (
-                <>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-medium text-text-primary leading-none truncate">
-                      {displayName}
-                    </p>
-                    <p className="text-[11px] text-text-tertiary capitalize mt-0.5">
-                      {profile.role}
-                    </p>
-                  </div>
-                  <button
-                    onClick={signOut}
-                    className="ml-auto w-7 h-7 rounded-lg flex items-center justify-center text-text-tertiary hover:text-text-primary transition-all duration-150 flex-shrink-0"
-                    style={{ background: 'transparent' }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-hover-muted)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = ''}
-                    title="Sign out"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                  </button>
-                </>
-              )}
+        {/* User info (static - no auth) */}
+        <div
+          className={`p-3 flex-shrink-0 ${collapsed ? 'flex justify-center' : ''}`}
+          style={{ borderTop: '1px solid var(--border-light)' }}
+        >
+          <div className={`flex items-center ${collapsed ? '' : 'gap-3'}`}>
+            <div className="w-8 h-8 rounded-full bg-accent-muted border border-accent-border flex items-center justify-center text-xs font-semibold text-accent flex-shrink-0">
+              A
             </div>
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-medium text-text-primary leading-none truncate">
+                  Ayodele Oluwafimidaraayo
+                </p>
+                <p className="text-[11px] text-text-tertiary mt-0.5">
+                  Owner
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </aside>
 
       {/* Mobile menu button */}

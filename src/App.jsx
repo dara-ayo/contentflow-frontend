@@ -1,72 +1,65 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
-import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
 import NewSubmission from './pages/NewSubmission'
 import SubmissionDetail from './pages/SubmissionDetail'
-import Login from './pages/Login'
 import Team from './pages/Team'
 import Settings from './pages/Settings'
-import AcceptInvite from './pages/AcceptInvite'
 import OAuthCallback from './pages/OAuthCallback'
 
 export default function App() {
   return (
     <Routes>
-      {/* Public routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/invite/:token" element={<AcceptInvite />} />
       <Route path="/settings/callback/:platform" element={<OAuthCallback />} />
 
-      {/* Protected routes (require authentication) */}
       <Route
         path="/"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <Dashboard />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Dashboard />
+          </Layout>
         }
       />
       <Route
         path="/submit"
         element={
-          <ProtectedRoute minRole="editor">
-            <Layout>
-              <NewSubmission />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <NewSubmission />
+          </Layout>
         }
       />
       <Route
         path="/submission/:id"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <SubmissionDetail />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <SubmissionDetail />
+          </Layout>
         }
       />
       <Route
         path="/team"
         element={
-          <ProtectedRoute minRole="admin">
-            <Layout>
-              <Team />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Team />
+          </Layout>
         }
       />
       <Route
         path="/settings"
         element={
-          <ProtectedRoute minRole="admin">
-            <Layout>
-              <Settings />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Settings />
+          </Layout>
+        }
+      />
+
+      {/* Catch-all — send to dashboard */}
+      <Route
+        path="*"
+        element={
+          <Layout>
+            <Dashboard />
+          </Layout>
         }
       />
     </Routes>
