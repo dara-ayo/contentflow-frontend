@@ -57,8 +57,9 @@ export default function OAuthCallback() {
         sessionStorage.removeItem('twitter_code_verifier')
       }
 
-      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_BASE || 'http://localhost:5678/webhook'
-      const response = await fetch(`${webhookUrl}/oauth-callback`, {
+      const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_BASE
+      const pathPrefix = import.meta.env.VITE_WEBHOOK_PATH_PREFIX || ''
+      const response = await fetch(`${webhookUrl}/${pathPrefix}oauth-callback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
